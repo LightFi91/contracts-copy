@@ -25,13 +25,18 @@ contract ZKHarvestFactory is IZKHarvestFactory {
         return allPairs.length;
     }
 
+    function getPairSalt(address _tokenA, address _tokenB) external pure returns (bytes32) {
+        (address token0, address token1) = _tokenA < _tokenB ? (_tokenA, _tokenB) : (_tokenB, _tokenA);
+        return keccak256(abi.encodePacked(token0, token1));
+    }
+
     function createPair(address tokenA, address tokenB) external returns (address pair) {
         require(tokenA != tokenB, 'zkHarvest: IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         require(token0 != address(0), 'zkHarvest: ZERO_ADDRESS');
         require(getPair[token0][token1] == address(0), 'zkHarvest: PAIR_EXISTS'); // single check is sufficient
         bytes memory bytecode = type(ZKHarvestPair).creationCode;
-        bytes32 salt = keccak256(abi.encodePacked(token0, token1));
+        bytes32 salt = this.getPairSalt(tokenA, tokenB);
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }

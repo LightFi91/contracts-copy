@@ -8,6 +8,7 @@ interface IZKHarvestFactory {
     function feeTo() external view returns (address);
     function feeToSetter() external view returns (address);
 
+    function getPairSalt(address _tokenA, address _tokenB) external pure returns (bytes32);
     function getPair(address tokenA, address tokenB) external view returns (address pair);
     function allPairs(uint) external view returns (address pair);
     function allPairsLength() external view returns (uint);

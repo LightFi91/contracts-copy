@@ -246,4 +246,17 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20 {
     function sync() external lock {
         _update(IERC20(token0).balanceOf(address(this)), IERC20(token1).balanceOf(address(this)), reserve0, reserve1);
     }
+
+    // Overrides
+    function approve(address spender, uint value) external override(IZKHarvestPair, ZKHarvestERC20) returns (bool) {
+        return ZKHarvestERC20(this).approve(spender, value);
+    }
+
+    function transfer(address to, uint value) external override(IZKHarvestPair, ZKHarvestERC20) returns (bool) {
+        return ZKHarvestERC20(this).transfer(to, value);
+    }
+
+    function transferFrom(address from, address to, uint value) external override(IZKHarvestPair, ZKHarvestERC20) returns (bool) {
+        return ZKHarvestERC20(this).transferFrom(from, to, value);
+    }
 }

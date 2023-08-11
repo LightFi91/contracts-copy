@@ -57,18 +57,18 @@ contract ZKHarvestERC20 is IZKHarvestERC20 {
         emit Transfer(from, to, value);
     }
 
-    function approve(address spender, uint value) external returns (bool) {
+    function approve(address spender, uint value) virtual external returns (bool) {
         _approve(msg.sender, spender, value);
         return true;
     }
 
-    function transfer(address to, uint value) external returns (bool) {
+    function transfer(address to, uint value) virtual external returns (bool) {
         require(to != address(0), 'zkHarvest: TO cannot be the zero address');
         _transfer(msg.sender, to, value);
         return true;
     }
 
-    function transferFrom(address from, address to, uint value) external returns (bool) {
+    function transferFrom(address from, address to, uint value) virtual external returns (bool) {
         if (allowance[from][msg.sender] != type(uint256).max) {
             allowance[from][msg.sender] = allowance[from][msg.sender].sub(value);
         }

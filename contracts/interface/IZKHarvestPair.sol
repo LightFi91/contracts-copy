@@ -23,7 +23,7 @@ interface IZKHarvestPair {
     // function PERMIT_TYPEHASH() external pure returns (bytes32);
     // function nonces(address owner) external view returns (uint);
 
-    // function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external;
+    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external;
 
     event Mint(address indexed sender, uint amount0, uint amount1);
     event Burn(address indexed sender, uint amount0, uint amount1, address indexed to);
@@ -42,6 +42,7 @@ interface IZKHarvestPair {
     function token0() external view returns (address);
     function token1() external view returns (address);
     function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+    function getReservesSimple() external view returns (uint112, uint112);
     function setLiqTax(bool token0_Tax , bool token1_tax) external returns(bool);
     function setRLiqTax(bool token0_Tax , bool token1_tax) external returns(bool);
     function isAddTaxFree(address token) external view returns(bool);
@@ -53,6 +54,8 @@ interface IZKHarvestPair {
     function mint(address to) external returns (uint liquidity);
     function burn(address to) external returns (uint amount0, uint amount1);
     function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;
+    function swapFor0(uint amount0Out, address to) external;
+    function swapFor1(uint amount1Out, address to) external;
     function skim(address to) external;
     function sync() external;
 

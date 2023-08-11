@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 import '../interface/IZKHarvestPair.sol';
 import '../interface/IZKHarvestPair.sol';
-import '../v2/ZHKToken.sol';
+import '../v2/ZKHToken.sol';
 import '../interface/IZKHarvestFactory.sol';
 
 library ZKHLibrary {

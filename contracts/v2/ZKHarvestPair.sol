@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import "../interface/UQ112x112.sol";
 import "../interface/Math.sol";
@@ -11,7 +12,7 @@ import "../interface/IZKHarvestFactory.sol";
 import "../interface/IZKHarvestCallee.sol";
 import "./ZKHarvestERC20.sol";
 
-contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20 {
+contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20, ReentrancyGuard {
     using SafeMath  for uint;
     using UQ112x112 for uint224;
 
@@ -37,18 +38,32 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20 {
     
     mapping (address => bool) private _addTaxFree;
     mapping (address => bool) private _removeTaxFree;
-    
-    modifier lock() {
-        require(unlocked == 1, 'zkHarvest: LOCKED');
-        unlocked = 0;
-        _;
-        unlocked = 1;
-    }
+
 
     function getReserves() public view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast) {
         _reserve0 = reserve0;
         _reserve1 = reserve1;
         _blockTimestampLast = blockTimestampLast;
+    }
+
+    function getReservesSimple() external view override returns (uint112, uint112) {
+        return (reserve0, reserve1);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+    INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    function _getReserves() private view returns (uint112, uint112) {
+        return (reserve0, reserve1);
+    }
+
+
+    function _getBalances(address _token0, address _token1) private view returns (uint, uint) {
+        return (
+            IERC20(_token0).balanceOf(address(this)),
+            IERC20(_token1).balanceOf(address(this))
+        );
     }
     
     function setLiqTax(bool token0_Tax , bool token1_tax) external returns(bool) {
@@ -143,7 +158,7 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20 {
     }
 
     // this low-level function should be called from a contract which performs important safety checks
-    function mint(address to) external lock returns (uint liquidity) {
+    function mint(address to) external nonReentrant returns (uint liquidity) {
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
         uint balance0 = IERC20(token0).balanceOf(address(this));
         uint balance1 = IERC20(token1).balanceOf(address(this));
@@ -167,7 +182,7 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20 {
     }
 
     // this low-level function should be called from a contract which performs important safety checks
-    function burn(address to) external lock returns (uint amount0, uint amount1) {
+    function burn(address to) external nonReentrant returns (uint amount0, uint amount1) {
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
         address _token0 = token0;                                // gas savings
         address _token1 = token1;                                // gas savings
@@ -204,7 +219,7 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20 {
     }
 
     // this low-level function should be called from a contract which performs important safety checks
-    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external lock {
+    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external nonReentrant {
         require(amount0Out > 0 || amount1Out > 0, 'zkHarvest: INSUFFICIENT_OUTPUT_AMOUNT');
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
         require(amount0Out < _reserve0 && amount1Out < _reserve1, 'zkHarvest: INSUFFICIENT_LIQUIDITY');
@@ -234,8 +249,49 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20 {
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
     }
 
+    function swapFor0(uint amount0Out, address to) external override nonReentrant {
+        require(amount0Out > 0, 'INSUFFICIENT_OUTPUT_AMOUNT');
+        (uint112 _reserve0, uint112 _reserve1) = _getReserves();
+        require(amount0Out < _reserve0, 'INSUFFICIENT_LIQUIDITY');
+
+        address _token0 = token0;
+        _safeTransfer(_token0, to, amount0Out);
+        (uint balance0After, uint balance1After) = _getBalances(_token0, token1);
+
+        uint amount1In = balance1After - _reserve1;
+        require(amount1In != 0, 'INSUFFICIENT_INPUT_AMOUNT');
+
+        // Checks the K.
+        uint balance1Adjusted = (balance1After * 10000) - (amount1In.mul(25));
+        require(balance0After * balance1Adjusted >= uint(_reserve0) * _reserve1 * 10000, 'K');
+
+        _update(balance0After, balance1After, _reserve0, _reserve1);
+        emit Swap(msg.sender, 0, amount1In, amount0Out, 0, to);
+    }
+
+    function swapFor1(uint amount1Out, address to) external override nonReentrant {
+        require(amount1Out != 0, 'INSUFFICIENT_OUTPUT_AMOUNT');
+        (uint112 _reserve0, uint112 _reserve1) = _getReserves();
+        require(amount1Out < _reserve1, 'INSUFFICIENT_LIQUIDITY');
+
+        address _token1 = token1;
+        _safeTransfer(_token1, to, amount1Out);
+        (uint balance0After, uint balance1After) = _getBalances(token0, _token1);
+
+        uint amount0In = balance0After - _reserve0;
+        require(amount0In != 0, 'INSUFFICIENT_INPUT_AMOUNT');
+
+        // Checks the K.
+        uint balance0Adjusted = (balance0After * 10000) - (amount0In.mul(25));
+        require(balance0Adjusted * balance1After >= uint(_reserve0) * _reserve1 * 10000, 'K');
+
+        _update(balance0After, balance1After, _reserve0, _reserve1);
+        emit Swap(msg.sender, amount0In, 0, 0, amount1Out, to);
+    }
+
+
     // force balances to match reserves
-    function skim(address to) external lock {
+    function skim(address to) external nonReentrant {
         address _token0 = token0; // gas savings
         address _token1 = token1; // gas savings
         _safeTransfer(_token0, to, IERC20(_token0).balanceOf(address(this)).sub(reserve0));
@@ -243,7 +299,7 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20 {
     }
 
     // force reserves to match balances
-    function sync() external lock {
+    function sync() external nonReentrant {
         _update(IERC20(token0).balanceOf(address(this)), IERC20(token1).balanceOf(address(this)), reserve0, reserve1);
     }
 
@@ -258,5 +314,9 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20 {
 
     function transferFrom(address from, address to, uint value) external override(IZKHarvestPair, ZKHarvestERC20) returns (bool) {
         return ZKHarvestERC20(this).transferFrom(from, to, value);
+    }
+
+    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external override(IZKHarvestPair, ZKHarvestERC20) {
+        ZKHarvestERC20(this).permit(owner, spender, value, deadline, v, r, s);
     }
 }

@@ -36,6 +36,8 @@ export interface ZKHarvestFactoryInterface extends utils.Interface {
     "feeTo()": FunctionFragment;
     "feeToSetter()": FunctionFragment;
     "getPair(address,address)": FunctionFragment;
+    "getPairSalt(address,address)": FunctionFragment;
+    "initialize(address,address)": FunctionFragment;
     "setFeeTo(address)": FunctionFragment;
     "setFeeToSetter(address)": FunctionFragment;
   };
@@ -49,6 +51,8 @@ export interface ZKHarvestFactoryInterface extends utils.Interface {
       | "feeTo"
       | "feeToSetter"
       | "getPair"
+      | "getPairSalt"
+      | "initialize"
       | "setFeeTo"
       | "setFeeToSetter"
   ): FunctionFragment;
@@ -79,6 +83,14 @@ export interface ZKHarvestFactoryInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getPairSalt",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setFeeTo",
     values: [PromiseOrValue<string>]
   ): string;
@@ -103,6 +115,11 @@ export interface ZKHarvestFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getPair", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getPairSalt",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setFeeTo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setFeeToSetter",
@@ -110,11 +127,20 @@ export interface ZKHarvestFactoryInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "Initialized(uint8)": EventFragment;
     "PairCreated(address,address,address,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PairCreated"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface PairCreatedEventObject {
   token0: string;
@@ -181,6 +207,18 @@ export interface ZKHarvestFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    getPairSalt(
+      _tokenA: PromiseOrValue<string>,
+      _tokenB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    initialize(
+      _feeToSetter: PromiseOrValue<string>,
+      _feeTo: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setFeeTo(
       _feeTo: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -216,6 +254,18 @@ export interface ZKHarvestFactory extends BaseContract {
     arg1: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  getPairSalt(
+    _tokenA: PromiseOrValue<string>,
+    _tokenB: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  initialize(
+    _feeToSetter: PromiseOrValue<string>,
+    _feeTo: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   setFeeTo(
     _feeTo: PromiseOrValue<string>,
@@ -253,6 +303,18 @@ export interface ZKHarvestFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    getPairSalt(
+      _tokenA: PromiseOrValue<string>,
+      _tokenB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    initialize(
+      _feeToSetter: PromiseOrValue<string>,
+      _feeTo: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setFeeTo(
       _feeTo: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -265,6 +327,9 @@ export interface ZKHarvestFactory extends BaseContract {
   };
 
   filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "PairCreated(address,address,address,uint256)"(
       token0?: PromiseOrValue<string> | null,
       token1?: PromiseOrValue<string> | null,
@@ -305,6 +370,18 @@ export interface ZKHarvestFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getPairSalt(
+      _tokenA: PromiseOrValue<string>,
+      _tokenB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    initialize(
+      _feeToSetter: PromiseOrValue<string>,
+      _feeTo: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setFeeTo(
       _feeTo: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -342,6 +419,18 @@ export interface ZKHarvestFactory extends BaseContract {
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPairSalt(
+      _tokenA: PromiseOrValue<string>,
+      _tokenB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _feeToSetter: PromiseOrValue<string>,
+      _feeTo: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     setFeeTo(

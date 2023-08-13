@@ -35,6 +35,7 @@ export interface ZkHarvestLockerInterface extends utils.Interface {
     "fee()": FunctionFragment;
     "feeAddress()": FunctionFragment;
     "getUserInfo(address)": FunctionFragment;
+    "initialize(address,address)": FunctionFragment;
     "lock(address,uint256,uint256,string)": FunctionFragment;
     "lockFor(address,address,uint256,uint256,string)": FunctionFragment;
     "lockInfo(uint256)": FunctionFragment;
@@ -56,6 +57,7 @@ export interface ZkHarvestLockerInterface extends utils.Interface {
       | "fee"
       | "feeAddress"
       | "getUserInfo"
+      | "initialize"
       | "lock"
       | "lockFor"
       | "lockInfo"
@@ -86,6 +88,10 @@ export interface ZkHarvestLockerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getUserInfo",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "lock",
@@ -149,6 +155,7 @@ export interface ZkHarvestLockerInterface extends utils.Interface {
     functionFragment: "getUserInfo",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "lock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "lockFor", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "lockInfo", data: BytesLike): Result;
@@ -175,6 +182,7 @@ export interface ZkHarvestLockerInterface extends utils.Interface {
 
   events: {
     "ExtendLock(uint256,uint256)": EventFragment;
+    "Initialized(uint8)": EventFragment;
     "Lock(address,address,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "SetFeeAddress(address)": EventFragment;
@@ -182,6 +190,7 @@ export interface ZkHarvestLockerInterface extends utils.Interface {
   };
 
   getEvent(nameOrSignatureOrTopic: "ExtendLock"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Lock"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SetFeeAddress"): EventFragment;
@@ -198,6 +207,13 @@ export type ExtendLockEvent = TypedEvent<
 >;
 
 export type ExtendLockEventFilter = TypedEventFilter<ExtendLockEvent>;
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface LockEventObject {
   Owner: string;
@@ -288,6 +304,12 @@ export interface ZkHarvestLocker extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
+    initialize(
+      _devaddr: PromiseOrValue<string>,
+      _feeAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     lock(
       _token: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
@@ -376,6 +398,12 @@ export interface ZkHarvestLocker extends BaseContract {
     user: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
+
+  initialize(
+    _devaddr: PromiseOrValue<string>,
+    _feeAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   lock(
     _token: PromiseOrValue<string>,
@@ -466,6 +494,12 @@ export interface ZkHarvestLocker extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
+    initialize(
+      _devaddr: PromiseOrValue<string>,
+      _feeAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     lock(
       _token: PromiseOrValue<string>,
       _amount: PromiseOrValue<BigNumberish>,
@@ -538,6 +572,9 @@ export interface ZkHarvestLocker extends BaseContract {
     ): ExtendLockEventFilter;
     ExtendLock(LockerID?: null, NewUnlockTime?: null): ExtendLockEventFilter;
 
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "Lock(address,address,uint256,uint256)"(
       Owner?: null,
       Token?: null,
@@ -588,6 +625,12 @@ export interface ZkHarvestLocker extends BaseContract {
     getUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    initialize(
+      _devaddr: PromiseOrValue<string>,
+      _feeAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     lock(
@@ -668,6 +711,12 @@ export interface ZkHarvestLocker extends BaseContract {
     getUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _devaddr: PromiseOrValue<string>,
+      _feeAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     lock(

@@ -37,6 +37,7 @@ export interface ZkHarvestTreasurerInterface extends utils.Interface {
     "claimableWeeksToPay(address)": FunctionFragment;
     "expressClaimBurnBP()": FunctionFragment;
     "getRewardForWeek(address,uint256)": FunctionFragment;
+    "initialize(address,uint256,uint256,uint256)": FunctionFragment;
     "lockedRewards(address)": FunctionFragment;
     "lockedRewardsBP()": FunctionFragment;
     "lockupTimeW()": FunctionFragment;
@@ -67,6 +68,7 @@ export interface ZkHarvestTreasurerInterface extends utils.Interface {
       | "claimableWeeksToPay"
       | "expressClaimBurnBP"
       | "getRewardForWeek"
+      | "initialize"
       | "lockedRewards"
       | "lockedRewardsBP"
       | "lockupTimeW"
@@ -118,6 +120,15 @@ export interface ZkHarvestTreasurerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getRewardForWeek",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "lockedRewards",
@@ -215,6 +226,7 @@ export interface ZkHarvestTreasurerInterface extends utils.Interface {
     functionFragment: "getRewardForWeek",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "lockedRewards",
     data: BytesLike
@@ -276,12 +288,14 @@ export interface ZkHarvestTreasurerInterface extends utils.Interface {
   events: {
     "Claim(address,uint256)": EventFragment;
     "ExpressClaim(address,uint256,uint256)": EventFragment;
+    "Initialized(uint8)": EventFragment;
     "LockUp(address,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Claim"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ExpressClaim"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "LockUp"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
@@ -305,6 +319,13 @@ export type ExpressClaimEvent = TypedEvent<
 >;
 
 export type ExpressClaimEventFilter = TypedEventFilter<ExpressClaimEvent>;
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface LockUpEventObject {
   user: string;
@@ -388,6 +409,14 @@ export interface ZkHarvestTreasurer extends BaseContract {
       _week: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    initialize(
+      _zkh: PromiseOrValue<string>,
+      _lockedRewardsBP: PromiseOrValue<BigNumberish>,
+      _expressClaimBurnBP: PromiseOrValue<BigNumberish>,
+      _lockupTimeW: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     lockedRewards(
       _user: PromiseOrValue<string>,
@@ -488,6 +517,14 @@ export interface ZkHarvestTreasurer extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  initialize(
+    _zkh: PromiseOrValue<string>,
+    _lockedRewardsBP: PromiseOrValue<BigNumberish>,
+    _expressClaimBurnBP: PromiseOrValue<BigNumberish>,
+    _lockupTimeW: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   lockedRewards(
     _user: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -587,6 +624,14 @@ export interface ZkHarvestTreasurer extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    initialize(
+      _zkh: PromiseOrValue<string>,
+      _lockedRewardsBP: PromiseOrValue<BigNumberish>,
+      _expressClaimBurnBP: PromiseOrValue<BigNumberish>,
+      _lockupTimeW: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     lockedRewards(
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -673,6 +718,9 @@ export interface ZkHarvestTreasurer extends BaseContract {
       amountBurnt?: null
     ): ExpressClaimEventFilter;
 
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "LockUp(address,uint256,uint256)"(
       user?: PromiseOrValue<string> | null,
       amount?: null,
@@ -725,6 +773,14 @@ export interface ZkHarvestTreasurer extends BaseContract {
       _user: PromiseOrValue<string>,
       _week: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    initialize(
+      _zkh: PromiseOrValue<string>,
+      _lockedRewardsBP: PromiseOrValue<BigNumberish>,
+      _expressClaimBurnBP: PromiseOrValue<BigNumberish>,
+      _lockupTimeW: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     lockedRewards(
@@ -827,6 +883,14 @@ export interface ZkHarvestTreasurer extends BaseContract {
       _user: PromiseOrValue<string>,
       _week: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _zkh: PromiseOrValue<string>,
+      _lockedRewardsBP: PromiseOrValue<BigNumberish>,
+      _expressClaimBurnBP: PromiseOrValue<BigNumberish>,
+      _lockupTimeW: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     lockedRewards(

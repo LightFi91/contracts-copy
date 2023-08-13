@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ZKHLibrary",
+  "sourceName": "contracts/lib/ZKHLibrary.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea264697066735822122070775221044698da378cd8ae26c7dd7de559e63fc8d3b75b534623ac0bcc272f64736f6c63430008110033",
+  "deployedBytecode": "0x600080fdfea264697066735822122070775221044698da378cd8ae26c7dd7de559e63fc8d3b75b534623ac0bcc272f64736f6c63430008110033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

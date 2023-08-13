@@ -2,8 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as interface from "./interface";
+export * as old from "./old";
 export * as v2 from "./v2";
-export { ZkHarvest__factory } from "./ZkHarvest__factory";
-export { ZkHarvestIFO__factory } from "./ZkHarvestIFO__factory";
-export { ZkHarvestToken__factory } from "./ZkHarvestToken__factory";
-export { ZkHarvestTreasurer__factory } from "./ZkHarvestTreasurer__factory";

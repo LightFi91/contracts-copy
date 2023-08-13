@@ -30,50 +30,68 @@ import type {
 export interface IZKHarvestPairInterface extends utils.Interface {
   functions: {
     "MINIMUM_LIQUIDITY()": FunctionFragment;
+    "approve(address,uint256)": FunctionFragment;
     "burn(address)": FunctionFragment;
     "factory()": FunctionFragment;
     "getReserves()": FunctionFragment;
+    "getReservesSimple()": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
     "isAddTaxFree(address)": FunctionFragment;
     "isRemoveTaxFree(address)": FunctionFragment;
     "kLast()": FunctionFragment;
     "mint(address)": FunctionFragment;
+    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "price0CumulativeLast()": FunctionFragment;
     "price1CumulativeLast()": FunctionFragment;
     "setLiqTax(bool,bool)": FunctionFragment;
     "setRLiqTax(bool,bool)": FunctionFragment;
     "skim(address)": FunctionFragment;
     "swap(uint256,uint256,address,bytes)": FunctionFragment;
+    "swapFor0(uint256,address)": FunctionFragment;
+    "swapFor1(uint256,address)": FunctionFragment;
     "sync()": FunctionFragment;
     "token0()": FunctionFragment;
     "token1()": FunctionFragment;
+    "transfer(address,uint256)": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "MINIMUM_LIQUIDITY"
+      | "approve"
       | "burn"
       | "factory"
       | "getReserves"
+      | "getReservesSimple"
       | "initialize"
       | "isAddTaxFree"
       | "isRemoveTaxFree"
       | "kLast"
       | "mint"
+      | "permit"
       | "price0CumulativeLast"
       | "price1CumulativeLast"
       | "setLiqTax"
       | "setRLiqTax"
       | "skim"
       | "swap"
+      | "swapFor0"
+      | "swapFor1"
       | "sync"
       | "token0"
       | "token1"
+      | "transfer"
+      | "transferFrom"
   ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "MINIMUM_LIQUIDITY",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "approve",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "burn",
@@ -82,6 +100,10 @@ export interface IZKHarvestPairInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "factory", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getReserves",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getReservesSimple",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -100,6 +122,18 @@ export interface IZKHarvestPairInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "mint",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "permit",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "price0CumulativeLast",
@@ -130,18 +164,43 @@ export interface IZKHarvestPairInterface extends utils.Interface {
       PromiseOrValue<BytesLike>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "swapFor0",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "swapFor1",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(functionFragment: "sync", values?: undefined): string;
   encodeFunctionData(functionFragment: "token0", values?: undefined): string;
   encodeFunctionData(functionFragment: "token1", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "transfer",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferFrom",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "MINIMUM_LIQUIDITY",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getReserves",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getReservesSimple",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
@@ -155,6 +214,7 @@ export interface IZKHarvestPairInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "kLast", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "price0CumulativeLast",
     data: BytesLike
@@ -167,9 +227,16 @@ export interface IZKHarvestPairInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "setRLiqTax", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "skim", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "swap", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "swapFor0", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "swapFor1", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "sync", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token0", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token1", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
 
   events: {
     "Burn(address,uint256,uint256,address)": EventFragment;
@@ -261,6 +328,12 @@ export interface IZKHarvestPair extends BaseContract {
   functions: {
     MINIMUM_LIQUIDITY(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    approve(
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     burn(
       to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -277,6 +350,10 @@ export interface IZKHarvestPair extends BaseContract {
         blockTimestampLast: number;
       }
     >;
+
+    getReservesSimple(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
 
     initialize(
       arg0: PromiseOrValue<string>,
@@ -298,6 +375,17 @@ export interface IZKHarvestPair extends BaseContract {
 
     mint(
       to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    permit(
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      deadline: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -330,6 +418,18 @@ export interface IZKHarvestPair extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    swapFor0(
+      amount0Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    swapFor1(
+      amount1Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     sync(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -337,9 +437,28 @@ export interface IZKHarvestPair extends BaseContract {
     token0(overrides?: CallOverrides): Promise<[string]>;
 
     token1(overrides?: CallOverrides): Promise<[string]>;
+
+    transfer(
+      to: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    transferFrom(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   MINIMUM_LIQUIDITY(overrides?: CallOverrides): Promise<BigNumber>;
+
+  approve(
+    spender: PromiseOrValue<string>,
+    value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   burn(
     to: PromiseOrValue<string>,
@@ -357,6 +476,8 @@ export interface IZKHarvestPair extends BaseContract {
       blockTimestampLast: number;
     }
   >;
+
+  getReservesSimple(overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
 
   initialize(
     arg0: PromiseOrValue<string>,
@@ -378,6 +499,17 @@ export interface IZKHarvestPair extends BaseContract {
 
   mint(
     to: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  permit(
+    owner: PromiseOrValue<string>,
+    spender: PromiseOrValue<string>,
+    value: PromiseOrValue<BigNumberish>,
+    deadline: PromiseOrValue<BigNumberish>,
+    v: PromiseOrValue<BigNumberish>,
+    r: PromiseOrValue<BytesLike>,
+    s: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -410,6 +542,18 @@ export interface IZKHarvestPair extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  swapFor0(
+    amount0Out: PromiseOrValue<BigNumberish>,
+    to: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  swapFor1(
+    amount1Out: PromiseOrValue<BigNumberish>,
+    to: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   sync(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -418,8 +562,27 @@ export interface IZKHarvestPair extends BaseContract {
 
   token1(overrides?: CallOverrides): Promise<string>;
 
+  transfer(
+    to: PromiseOrValue<string>,
+    value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  transferFrom(
+    from: PromiseOrValue<string>,
+    to: PromiseOrValue<string>,
+    value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     MINIMUM_LIQUIDITY(overrides?: CallOverrides): Promise<BigNumber>;
+
+    approve(
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     burn(
       to: PromiseOrValue<string>,
@@ -439,6 +602,10 @@ export interface IZKHarvestPair extends BaseContract {
         blockTimestampLast: number;
       }
     >;
+
+    getReservesSimple(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
 
     initialize(
       arg0: PromiseOrValue<string>,
@@ -462,6 +629,17 @@ export interface IZKHarvestPair extends BaseContract {
       to: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    permit(
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      deadline: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     price0CumulativeLast(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -489,11 +667,36 @@ export interface IZKHarvestPair extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    swapFor0(
+      amount0Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    swapFor1(
+      amount1Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     sync(overrides?: CallOverrides): Promise<void>;
 
     token0(overrides?: CallOverrides): Promise<string>;
 
     token1(overrides?: CallOverrides): Promise<string>;
+
+    transfer(
+      to: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    transferFrom(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
   };
 
   filters: {
@@ -545,6 +748,12 @@ export interface IZKHarvestPair extends BaseContract {
   estimateGas: {
     MINIMUM_LIQUIDITY(overrides?: CallOverrides): Promise<BigNumber>;
 
+    approve(
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     burn(
       to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -553,6 +762,8 @@ export interface IZKHarvestPair extends BaseContract {
     factory(overrides?: CallOverrides): Promise<BigNumber>;
 
     getReserves(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getReservesSimple(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(
       arg0: PromiseOrValue<string>,
@@ -574,6 +785,17 @@ export interface IZKHarvestPair extends BaseContract {
 
     mint(
       to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    permit(
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      deadline: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -606,6 +828,18 @@ export interface IZKHarvestPair extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    swapFor0(
+      amount0Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    swapFor1(
+      amount1Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     sync(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -613,10 +847,29 @@ export interface IZKHarvestPair extends BaseContract {
     token0(overrides?: CallOverrides): Promise<BigNumber>;
 
     token1(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transfer(
+      to: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    transferFrom(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     MINIMUM_LIQUIDITY(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    approve(
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     burn(
       to: PromiseOrValue<string>,
@@ -626,6 +879,8 @@ export interface IZKHarvestPair extends BaseContract {
     factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getReserves(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getReservesSimple(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     initialize(
       arg0: PromiseOrValue<string>,
@@ -647,6 +902,17 @@ export interface IZKHarvestPair extends BaseContract {
 
     mint(
       to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    permit(
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      deadline: PromiseOrValue<BigNumberish>,
+      v: PromiseOrValue<BigNumberish>,
+      r: PromiseOrValue<BytesLike>,
+      s: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -683,6 +949,18 @@ export interface IZKHarvestPair extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    swapFor0(
+      amount0Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    swapFor1(
+      amount1Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     sync(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -690,5 +968,18 @@ export interface IZKHarvestPair extends BaseContract {
     token0(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     token1(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    transfer(
+      to: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferFrom(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }

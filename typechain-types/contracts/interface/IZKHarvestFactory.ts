@@ -35,6 +35,7 @@ export interface IZKHarvestFactoryInterface extends utils.Interface {
     "feeTo()": FunctionFragment;
     "feeToSetter()": FunctionFragment;
     "getPair(address,address)": FunctionFragment;
+    "getPairSalt(address,address)": FunctionFragment;
     "setFeeTo(address)": FunctionFragment;
     "setFeeToSetter(address)": FunctionFragment;
   };
@@ -47,6 +48,7 @@ export interface IZKHarvestFactoryInterface extends utils.Interface {
       | "feeTo"
       | "feeToSetter"
       | "getPair"
+      | "getPairSalt"
       | "setFeeTo"
       | "setFeeToSetter"
   ): FunctionFragment;
@@ -73,6 +75,10 @@ export interface IZKHarvestFactoryInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getPairSalt",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setFeeTo",
     values: [PromiseOrValue<string>]
   ): string;
@@ -93,6 +99,10 @@ export interface IZKHarvestFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getPair", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getPairSalt",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "setFeeTo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setFeeToSetter",
@@ -169,6 +179,12 @@ export interface IZKHarvestFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string] & { pair: string }>;
 
+    getPairSalt(
+      _tokenA: PromiseOrValue<string>,
+      _tokenB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     setFeeTo(
       arg0: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -203,6 +219,12 @@ export interface IZKHarvestFactory extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getPairSalt(
+    _tokenA: PromiseOrValue<string>,
+    _tokenB: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   setFeeTo(
     arg0: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -234,6 +256,12 @@ export interface IZKHarvestFactory extends BaseContract {
     getPair(
       tokenA: PromiseOrValue<string>,
       tokenB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getPairSalt(
+      _tokenA: PromiseOrValue<string>,
+      _tokenB: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -287,6 +315,12 @@ export interface IZKHarvestFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getPairSalt(
+      _tokenA: PromiseOrValue<string>,
+      _tokenB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     setFeeTo(
       arg0: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -319,6 +353,12 @@ export interface IZKHarvestFactory extends BaseContract {
     getPair(
       tokenA: PromiseOrValue<string>,
       tokenB: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPairSalt(
+      _tokenA: PromiseOrValue<string>,
+      _tokenB: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

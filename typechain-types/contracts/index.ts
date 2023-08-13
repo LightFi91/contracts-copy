@@ -3,9 +3,7 @@
 /* eslint-disable */
 import type * as interface from "./interface";
 export type { interface };
+import type * as old from "./old";
+export type { old };
 import type * as v2 from "./v2";
 export type { v2 };
-export type { ZkHarvest } from "./ZkHarvest";
-export type { ZkHarvestIFO } from "./ZkHarvestIFO";
-export type { ZkHarvestToken } from "./ZkHarvestToken";
-export type { ZkHarvestTreasurer } from "./ZkHarvestTreasurer";

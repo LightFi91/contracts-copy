@@ -54,6 +54,7 @@ export interface ZKHTokenInterface extends utils.Interface {
     "includeInFeeR(address)": FunctionFragment;
     "includeInFeeS(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
+    "initialize(address,address,uint256)": FunctionFragment;
     "isExcludedFromFee(address)": FunctionFragment;
     "isPair(address)": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
@@ -104,6 +105,7 @@ export interface ZKHTokenInterface extends utils.Interface {
       | "includeInFeeR"
       | "includeInFeeS"
       | "increaseAllowance"
+      | "initialize"
       | "isExcludedFromFee"
       | "isPair"
       | "mint(address,uint256)"
@@ -221,6 +223,14 @@ export interface ZKHTokenInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "isExcludedFromFee",
@@ -370,6 +380,7 @@ export interface ZKHTokenInterface extends utils.Interface {
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isExcludedFromFee",
     data: BytesLike
@@ -438,6 +449,7 @@ export interface ZKHTokenInterface extends utils.Interface {
     "FeeAddressUpdated(address)": EventFragment;
     "IncludeInFeeR(address)": EventFragment;
     "IncludeInFeeS(address)": EventFragment;
+    "Initialized(uint8)": EventFragment;
     "NewDeveloper(address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "SetPair(address,bool)": EventFragment;
@@ -454,6 +466,7 @@ export interface ZKHTokenInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "FeeAddressUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "IncludeInFeeR"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "IncludeInFeeS"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewDeveloper"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SetPair"): EventFragment;
@@ -549,6 +562,13 @@ export interface IncludeInFeeSEventObject {
 export type IncludeInFeeSEvent = TypedEvent<[string], IncludeInFeeSEventObject>;
 
 export type IncludeInFeeSEventFilter = TypedEventFilter<IncludeInFeeSEvent>;
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface NewDeveloperEventObject {
   arg0: string;
@@ -733,6 +753,13 @@ export interface ZKHToken extends BaseContract {
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    initialize(
+      _dev2: PromiseOrValue<string>,
+      _feeAddress: PromiseOrValue<string>,
+      _initialMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -946,6 +973,13 @@ export interface ZKHToken extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  initialize(
+    _dev2: PromiseOrValue<string>,
+    _feeAddress: PromiseOrValue<string>,
+    _initialMint: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   isExcludedFromFee(
     account: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -1156,6 +1190,13 @@ export interface ZKHToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    initialize(
+      _dev2: PromiseOrValue<string>,
+      _feeAddress: PromiseOrValue<string>,
+      _initialMint: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     isExcludedFromFee(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1307,6 +1348,9 @@ export interface ZKHToken extends BaseContract {
     "IncludeInFeeS(address)"(arg0?: null): IncludeInFeeSEventFilter;
     IncludeInFeeS(arg0?: null): IncludeInFeeSEventFilter;
 
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "NewDeveloper(address)"(arg0?: null): NewDeveloperEventFilter;
     NewDeveloper(arg0?: null): NewDeveloperEventFilter;
 
@@ -1447,6 +1491,13 @@ export interface ZKHToken extends BaseContract {
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    initialize(
+      _dev2: PromiseOrValue<string>,
+      _feeAddress: PromiseOrValue<string>,
+      _initialMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1660,6 +1711,13 @@ export interface ZKHToken extends BaseContract {
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _dev2: PromiseOrValue<string>,
+      _feeAddress: PromiseOrValue<string>,
+      _initialMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

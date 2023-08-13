@@ -13,6 +13,34 @@ import * as Contracts from ".";
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
     getContractFactory(
+      name: "OwnableUpgradeable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.OwnableUpgradeable__factory>;
+    getContractFactory(
+      name: "Initializable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Initializable__factory>;
+    getContractFactory(
+      name: "ERC20Upgradeable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20Upgradeable__factory>;
+    getContractFactory(
+      name: "IERC20MetadataUpgradeable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20MetadataUpgradeable__factory>;
+    getContractFactory(
+      name: "IERC20PermitUpgradeable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20PermitUpgradeable__factory>;
+    getContractFactory(
+      name: "IERC20Upgradeable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Upgradeable__factory>;
+    getContractFactory(
+      name: "ContextUpgradeable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ContextUpgradeable__factory>;
+    getContractFactory(
       name: "Ownable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Ownable__factory>;
@@ -73,17 +101,69 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IZKHarvestPair__factory>;
     getContractFactory(
+      name: "IZKHRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IZKHRouter__factory>;
+    getContractFactory(
+      name: "IZKHEther",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IZKHEther__factory>;
+    getContractFactory(
+      name: "IZKHRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IZKHRouter__factory>;
+    getContractFactory(
       name: "IZKHToken",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IZKHToken__factory>;
     getContractFactory(
-      name: "ZkhMaster",
+      name: "ZkHarvest",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ZkhMaster__factory>;
+    ): Promise<Contracts.ZkHarvest__factory>;
     getContractFactory(
-      name: "ZKHToken",
+      name: "ZkHarvestIFO",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ZKHToken__factory>;
+    ): Promise<Contracts.ZkHarvestIFO__factory>;
+    getContractFactory(
+      name: "ZkHarvestToken",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZkHarvestToken__factory>;
+    getContractFactory(
+      name: "ZkHarvestTreasurer",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZkHarvestTreasurer__factory>;
+    getContractFactory(
+      name: "ZKHERC20Proxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHERC20Proxy__factory>;
+    getContractFactory(
+      name: "ZKHFactoryProxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHFactoryProxy__factory>;
+    getContractFactory(
+      name: "ZKHLockerProxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHLockerProxy__factory>;
+    getContractFactory(
+      name: "ZKHMasterProxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHMasterProxy__factory>;
+    getContractFactory(
+      name: "ZKHPairProxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHPairProxy__factory>;
+    getContractFactory(
+      name: "ZKHRouterProxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHRouterProxy__factory>;
+    getContractFactory(
+      name: "ZKHTokenProxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHTokenProxy__factory>;
+    getContractFactory(
+      name: "ZKHTreasurerProxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHTreasurerProxy__factory>;
     getContractFactory(
       name: "ZKHarvestERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -101,30 +181,61 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ZKHarvestPair__factory>;
     getContractFactory(
+      name: "ZKHRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHRouter__factory>;
+    getContractFactory(
+      name: "ZKHMaster",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZKHMaster__factory>;
+    getContractFactory(
       name: "ZKHTimelock",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ZKHTimelock__factory>;
     getContractFactory(
-      name: "ZkHarvestTreasurer",
+      name: "ZKHToken",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ZkHarvestTreasurer__factory>;
-    getContractFactory(
-      name: "ZkHarvest",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ZkHarvest__factory>;
-    getContractFactory(
-      name: "ZkHarvestIFO",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ZkHarvestIFO__factory>;
-    getContractFactory(
-      name: "ZkHarvestToken",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ZkHarvestToken__factory>;
+    ): Promise<Contracts.ZKHToken__factory>;
     getContractFactory(
       name: "ZkHarvestTreasurer",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ZkHarvestTreasurer__factory>;
 
+    getContractAt(
+      name: "OwnableUpgradeable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.OwnableUpgradeable>;
+    getContractAt(
+      name: "Initializable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Initializable>;
+    getContractAt(
+      name: "ERC20Upgradeable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20Upgradeable>;
+    getContractAt(
+      name: "IERC20MetadataUpgradeable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20MetadataUpgradeable>;
+    getContractAt(
+      name: "IERC20PermitUpgradeable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20PermitUpgradeable>;
+    getContractAt(
+      name: "IERC20Upgradeable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Upgradeable>;
+    getContractAt(
+      name: "ContextUpgradeable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ContextUpgradeable>;
     getContractAt(
       name: "Ownable",
       address: string,
@@ -201,20 +312,85 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IZKHarvestPair>;
     getContractAt(
+      name: "IZKHRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IZKHRouter>;
+    getContractAt(
+      name: "IZKHEther",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IZKHEther>;
+    getContractAt(
+      name: "IZKHRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IZKHRouter>;
+    getContractAt(
       name: "IZKHToken",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IZKHToken>;
     getContractAt(
-      name: "ZkhMaster",
+      name: "ZkHarvest",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.ZkhMaster>;
+    ): Promise<Contracts.ZkHarvest>;
     getContractAt(
-      name: "ZKHToken",
+      name: "ZkHarvestIFO",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.ZKHToken>;
+    ): Promise<Contracts.ZkHarvestIFO>;
+    getContractAt(
+      name: "ZkHarvestToken",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZkHarvestToken>;
+    getContractAt(
+      name: "ZkHarvestTreasurer",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZkHarvestTreasurer>;
+    getContractAt(
+      name: "ZKHERC20Proxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHERC20Proxy>;
+    getContractAt(
+      name: "ZKHFactoryProxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHFactoryProxy>;
+    getContractAt(
+      name: "ZKHLockerProxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHLockerProxy>;
+    getContractAt(
+      name: "ZKHMasterProxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHMasterProxy>;
+    getContractAt(
+      name: "ZKHPairProxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHPairProxy>;
+    getContractAt(
+      name: "ZKHRouterProxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHRouterProxy>;
+    getContractAt(
+      name: "ZKHTokenProxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHTokenProxy>;
+    getContractAt(
+      name: "ZKHTreasurerProxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHTreasurerProxy>;
     getContractAt(
       name: "ZKHarvestERC20",
       address: string,
@@ -236,30 +412,25 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ZKHarvestPair>;
     getContractAt(
+      name: "ZKHRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHRouter>;
+    getContractAt(
+      name: "ZKHMaster",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZKHMaster>;
+    getContractAt(
       name: "ZKHTimelock",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ZKHTimelock>;
     getContractAt(
-      name: "ZkHarvestTreasurer",
+      name: "ZKHToken",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.ZkHarvestTreasurer>;
-    getContractAt(
-      name: "ZkHarvest",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ZkHarvest>;
-    getContractAt(
-      name: "ZkHarvestIFO",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ZkHarvestIFO>;
-    getContractAt(
-      name: "ZkHarvestToken",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ZkHarvestToken>;
+    ): Promise<Contracts.ZKHToken>;
     getContractAt(
       name: "ZkHarvestTreasurer",
       address: string,

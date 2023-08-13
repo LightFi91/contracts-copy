@@ -39,7 +39,9 @@ export interface ZKHarvestPairInterface extends utils.Interface {
     "decimals()": FunctionFragment;
     "factory()": FunctionFragment;
     "getReserves()": FunctionFragment;
+    "getReservesSimple()": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "isAddTaxFree(address)": FunctionFragment;
     "isRemoveTaxFree(address)": FunctionFragment;
     "kLast()": FunctionFragment;
@@ -56,6 +58,8 @@ export interface ZKHarvestPairInterface extends utils.Interface {
     "setRLiqTax(bool,bool)": FunctionFragment;
     "skim(address)": FunctionFragment;
     "swap(uint256,uint256,address,bytes)": FunctionFragment;
+    "swapFor0(uint256,address)": FunctionFragment;
+    "swapFor1(uint256,address)": FunctionFragment;
     "symbol()": FunctionFragment;
     "sync()": FunctionFragment;
     "token0()": FunctionFragment;
@@ -77,7 +81,9 @@ export interface ZKHarvestPairInterface extends utils.Interface {
       | "decimals"
       | "factory"
       | "getReserves"
-      | "initialize"
+      | "getReservesSimple"
+      | "initialize(address,address)"
+      | "initialize()"
       | "isAddTaxFree"
       | "isRemoveTaxFree"
       | "kLast"
@@ -94,6 +100,8 @@ export interface ZKHarvestPairInterface extends utils.Interface {
       | "setRLiqTax"
       | "skim"
       | "swap"
+      | "swapFor0"
+      | "swapFor1"
       | "symbol"
       | "sync"
       | "token0"
@@ -138,8 +146,16 @@ export interface ZKHarvestPairInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "initialize",
+    functionFragment: "getReservesSimple",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize(address,address)",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize()",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "isAddTaxFree",
@@ -206,6 +222,14 @@ export interface ZKHarvestPairInterface extends utils.Interface {
       PromiseOrValue<BytesLike>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "swapFor0",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "swapFor1",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(functionFragment: "sync", values?: undefined): string;
   encodeFunctionData(functionFragment: "token0", values?: undefined): string;
@@ -249,7 +273,18 @@ export interface ZKHarvestPairInterface extends utils.Interface {
     functionFragment: "getReserves",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getReservesSimple",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "initialize(address,address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "initialize()",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "isAddTaxFree",
     data: BytesLike
@@ -278,6 +313,8 @@ export interface ZKHarvestPairInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "setRLiqTax", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "skim", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "swap", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "swapFor0", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "swapFor1", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "sync", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token0", data: BytesLike): Result;
@@ -295,6 +332,7 @@ export interface ZKHarvestPairInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "Burn(address,uint256,uint256,address)": EventFragment;
+    "Initialized(uint8)": EventFragment;
     "Mint(address,uint256,uint256)": EventFragment;
     "Swap(address,uint256,uint256,uint256,uint256,address)": EventFragment;
     "Sync(uint112,uint112)": EventFragment;
@@ -303,6 +341,7 @@ export interface ZKHarvestPairInterface extends utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Burn"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Mint"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Swap"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Sync"): EventFragment;
@@ -333,6 +372,13 @@ export type BurnEvent = TypedEvent<
 >;
 
 export type BurnEventFilter = TypedEventFilter<BurnEvent>;
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface MintEventObject {
   sender: string;
@@ -450,9 +496,17 @@ export interface ZKHarvestPair extends BaseContract {
       }
     >;
 
-    initialize(
+    getReservesSimple(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
+
+    "initialize(address,address)"(
       _token0: PromiseOrValue<string>,
       _token1: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "initialize()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -530,6 +584,18 @@ export interface ZKHarvestPair extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    swapFor0(
+      amount0Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    swapFor1(
+      amount1Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
     sync(
@@ -598,9 +664,15 @@ export interface ZKHarvestPair extends BaseContract {
     }
   >;
 
-  initialize(
+  getReservesSimple(overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
+
+  "initialize(address,address)"(
     _token0: PromiseOrValue<string>,
     _token1: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "initialize()"(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -678,6 +750,18 @@ export interface ZKHarvestPair extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  swapFor0(
+    amount0Out: PromiseOrValue<BigNumberish>,
+    to: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  swapFor1(
+    amount1Out: PromiseOrValue<BigNumberish>,
+    to: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   symbol(overrides?: CallOverrides): Promise<string>;
 
   sync(
@@ -748,11 +832,17 @@ export interface ZKHarvestPair extends BaseContract {
       }
     >;
 
-    initialize(
+    getReservesSimple(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
+
+    "initialize(address,address)"(
       _token0: PromiseOrValue<string>,
       _token1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    "initialize()"(overrides?: CallOverrides): Promise<void>;
 
     isAddTaxFree(
       token: PromiseOrValue<string>,
@@ -825,6 +915,18 @@ export interface ZKHarvestPair extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    swapFor0(
+      amount0Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    swapFor1(
+      amount1Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     symbol(overrides?: CallOverrides): Promise<string>;
 
     sync(overrides?: CallOverrides): Promise<void>;
@@ -873,6 +975,9 @@ export interface ZKHarvestPair extends BaseContract {
       amount1?: null,
       to?: PromiseOrValue<string> | null
     ): BurnEventFilter;
+
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
 
     "Mint(address,uint256,uint256)"(
       sender?: PromiseOrValue<string> | null,
@@ -952,9 +1057,15 @@ export interface ZKHarvestPair extends BaseContract {
 
     getReserves(overrides?: CallOverrides): Promise<BigNumber>;
 
-    initialize(
+    getReservesSimple(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "initialize(address,address)"(
       _token0: PromiseOrValue<string>,
       _token1: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "initialize()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1032,6 +1143,18 @@ export interface ZKHarvestPair extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    swapFor0(
+      amount0Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    swapFor1(
+      amount1Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     sync(
@@ -1093,9 +1216,15 @@ export interface ZKHarvestPair extends BaseContract {
 
     getReserves(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    initialize(
+    getReservesSimple(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "initialize(address,address)"(
       _token0: PromiseOrValue<string>,
       _token1: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "initialize()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1174,6 +1303,18 @@ export interface ZKHarvestPair extends BaseContract {
       amount1Out: PromiseOrValue<BigNumberish>,
       to: PromiseOrValue<string>,
       data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    swapFor0(
+      amount0Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    swapFor1(
+      amount1Out: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

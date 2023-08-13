@@ -151,6 +151,30 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_tokenA",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_tokenB",
+        type: "address",
+      },
+    ],
+    name: "getPairSalt",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "",
         type: "address",
       },

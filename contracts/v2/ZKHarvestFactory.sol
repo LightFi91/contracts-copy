@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import "../interface/IZKHarvestFactory.sol";
 import "../interface/IZKHarvestPair.sol";
 import "./ZKHarvestPair.sol";
 
-contract ZKHarvestFactory is IZKHarvestFactory {
+contract ZKHarvestFactory is IZKHarvestFactory, Initializable {
     bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(ZKHarvestPair).creationCode));
 
     address public feeTo;
@@ -14,9 +15,10 @@ contract ZKHarvestFactory is IZKHarvestFactory {
 
     mapping(address => mapping(address => address)) public getPair;
     address[] public allPairs;
-
-    constructor(address _feeToSetter , address _feeTo) {
+    
+    function initialize(address _feeToSetter , address _feeTo) external initializer {
         require(_feeToSetter != address(0), 'zkHarvest: feeToSetter cannot be the zero address');
+        require(_feeTo != address(0), 'zkHarvest: feeTo cannot be the zero address');
         feeToSetter = _feeToSetter;
         feeTo = _feeTo;
     }

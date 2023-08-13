@@ -5,19 +5,19 @@ pragma solidity ^0.8.17;
 
 // website: https://zkharvest.io
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 
 import "../interface/ITreasurer.sol";
 import "../interface/IZKHToken.sol";
 
 
-contract ZKHMaster is Ownable, IERC721Receiver  {
+contract ZKHMaster is OwnableUpgradeable, IERC721Receiver  {
     using SafeMath for uint256;
-    using SafeERC20 for IERC20;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     // Info of each user.
     struct UserInfo {
@@ -43,7 +43,7 @@ contract ZKHMaster is Ownable, IERC721Receiver  {
 
     // Info of each pool.
     struct PoolInfo {
-        IERC20 lpToken; // Address of LP token contract.
+        IERC20Upgradeable lpToken; // Address of LP token contract.
         uint256 allocPoint; // How many allocation points assigned to this pool. Reward to distribute per second.
         uint256 depositFee; // LP Deposit fee.
         uint256 withdrawalFee; // LP Withdrawal fee
@@ -66,7 +66,7 @@ contract ZKHMaster is Ownable, IERC721Receiver  {
     // reference to the NFT contract
     IERC721Enumerable public nft;
     // The Treasurer. Handles rewards.
-    ITreasurer public immutable treasurer;
+    ITreasurer public treasurer;
     // NFT can be set status
     bool public canSetNFT;
     // Dev address.
@@ -140,19 +140,21 @@ contract ZKHMaster is Ownable, IERC721Receiver  {
         _;
     }
 
-    constructor(
+    function initialize(
         IZKHToken _rewardToken,
         address _devaddr,
         address _feeAddress,
         ITreasurer _treasurer,
         uint256 _startTimestamp
-    ) {
-        require(_rewardToken != IERC20(address(0)), 'ZKH: Reward Token cannot be the zero address');
+    ) public initializer {
+        __Ownable_init(); // Initialize the OwnableUpgradeable contract
+
+        require(_rewardToken != IERC20Upgradeable(address(0)), 'ZKH: Reward Token cannot be the zero address');
         require(_devaddr != address(0), 'ZKH: dev cannot be the zero address');
         require(_feeAddress != address(0), 'ZKH: FeeAddress cannot be the zero address');
         require(address(_treasurer) != address(0), 'ZKH: Treasurer cannot be the zero address');
         require(_startTimestamp >= block.timestamp , 'ZKH: Invalid Start time');
-        
+
         rewardToken = _rewardToken;
         devaddr = _devaddr;
         feeAddress = _feeAddress;
@@ -176,12 +178,10 @@ contract ZKHMaster is Ownable, IERC721Receiver  {
                 baseLpSupply: 0,
                 rewardEndTimestamp: MAX_INT,
                 harvestInterval: 1 hours
-                
             })
         );
 
         totalAllocPoint = 100;
-
     }
 	
     function setFeeAddress(address _feeAddress)public onlyDev returns (bool){
@@ -260,7 +260,7 @@ contract ZKHMaster is Ownable, IERC721Receiver  {
         uint256 _depositFee,
         uint256 _withdrawalFee,
         uint256 _harvestInterval,
-        IERC20 _lpToken,
+        IERC20Upgradeable _lpToken,
         uint256 _rewardEndTimestamp
     ) public onlyDev {
         
@@ -575,9 +575,10 @@ contract ZKHMaster is Ownable, IERC721Receiver  {
         }
         
         if(amount > 0) {
-            
+
             uint256 before = pool.lpToken.balanceOf(address(this));
             pool.lpToken.safeTransferFrom(address(msg.sender), address(this), amount);
+
             uint256 _after = pool.lpToken.balanceOf(address(this));
             amount = _after.sub(before); // Real amount of LP transfer to this address
             

@@ -39,6 +39,10 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20, ReentrancyGuard {
     mapping (address => bool) private _addTaxFree;
     mapping (address => bool) private _removeTaxFree;
 
+    function initialize() override public initializer {
+        super.initialize();
+        factory = msg.sender;
+    }
 
     function getReserves() public view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast) {
         _reserve0 = reserve0;
@@ -105,10 +109,6 @@ contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20, ReentrancyGuard {
         // bytes4(keccak256(bytes('transferTaxFree(address,uint256)')));
         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(0xdffc1a11, to, value));
         require(success && (data.length == 0 || abi.decode(data, (bool))), 'TransferHelper: TRANSFER_FAILED');
-    }
-
-    constructor() {
-        factory = msg.sender;
     }
 
     // called once by the factory at time of deployment

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-contract zkHarvestLocker is Ownable  {
+contract zkHarvestLocker is OwnableUpgradeable  {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -42,12 +42,7 @@ contract zkHarvestLocker is Ownable  {
     event Unlock(address Owner , uint256 LockerID);
     event ExtendLock(uint256 LockerID , uint256 NewUnlockTime);
     
-
-    constructor(
-        address _devaddr,
-        address _feeAddress
-    ) {
-        
+    function initialize(address _devaddr, address _feeAddress) external initializer {  
         require(_devaddr != address(0), 'ZKH: dev cannot be the zero address');
         require(_feeAddress != address(0), 'ZKH: FeeAddress cannot be the zero address');
        

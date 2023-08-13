@@ -2,13 +2,14 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "../interface/IZKHToken.sol";
 
 // ZKHToken with Governance.
-contract ZKHToken is IZKHToken, ERC20('zkHarvest', 'ZKH'), Ownable {
+contract ZKHToken is IZKHToken, ERC20Upgradeable, OwnableUpgradeable {
     using SafeMath for uint256;
     
     mapping (address => bool) private _isRExcludedFromFee; // excluded list from receive 
@@ -38,9 +39,16 @@ contract ZKHToken is IZKHToken, ERC20('zkHarvest', 'ZKH'), Ownable {
         require(msg.sender == dev1 || msg.sender == dev2 , "Error: Developer Required!");
         _;
     }
-    
-    constructor(address _dev2 , address _feeAddress, uint256 _initialMint) {
-     	require(_dev2 != address(0), 'ZKH: dev cannot be the zero address');
+
+    function initialize(
+        address _dev2, 
+        address _feeAddress, 
+        uint256 _initialMint
+    ) public initializer {
+        __ERC20_init('zkHarvest', 'ZKH');
+        __Ownable_init();
+
+        require(_dev2 != address(0), 'ZKH: dev cannot be the zero address');
      	require(_feeAddress != address(0), 'ZKH: feeAddress cannot be the zero address');
      	dev1 = msg.sender;
      	mint(msg.sender, _initialMint);
@@ -53,7 +61,6 @@ contract ZKHToken is IZKHToken, ERC20('zkHarvest', 'ZKH'), Ownable {
         _isRExcludedFromFee[feeAddress] = true;
         _isSExcludedFromFee[feeAddress] = true;
     }
-    
     
     /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (zkhMaster).
     function mint(address _to, uint256 _amount) public onlyOwner returns (bool) {
@@ -204,7 +211,7 @@ contract ZKHToken is IZKHToken, ERC20('zkHarvest', 'ZKH'), Ownable {
         
     }
 
-    function transferOwnership(address newOwner) public override(IZKHToken, Ownable) onlyOwner {
+    function transferOwnership(address newOwner) public override(IZKHToken, OwnableUpgradeable) onlyOwner {
         super.transferOwnership(newOwner);
     }
 

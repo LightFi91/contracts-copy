@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -12,7 +12,7 @@ import "../interface/IZKHToken.sol";
 import "../lib/TreasurerUtils.sol";
 
 
-contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
+contract ZkHarvestTreasurer is ITreasurerExpress, OwnableUpgradeable, ReentrancyGuard {
   using EnumerableSet for EnumerableSet.UintSet;
 
   modifier onlyZkHarvest() {
@@ -35,7 +35,7 @@ contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
   uint256 public constant MAX_LOCKUP_WEEKS = 24;
 
   // The ZKH token
-  IZKHToken public immutable zkh;
+  IZKHToken public zkh;
   // ZkHarvest address
   address public zkHarvest;
 
@@ -62,12 +62,13 @@ contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
     uint256 amountBurnt
   );
 
-  constructor(
+  function initialize(
     IZKHToken _zkh,
     uint256 _lockedRewardsBP,
     uint256 _expressClaimBurnBP,
     uint256 _lockupTimeW
-  ) {
+  ) external initializer {
+
     zkh = _zkh;
     require(
       _lockedRewardsBP <= 10000,

@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import "../lib/ZKHLibrary.sol";
 import "../lib/TransferHelper.sol";
@@ -12,7 +12,7 @@ import "../interface/IZKHarvestFactory.sol";
 import "../interface/IZKHarvestPair.sol";
 import "../interface/IZKHEther.sol";
 
-contract ZKHRouter is IZKHRouter, ReentrancyGuard {
+contract ZKHRouter is IZKHRouter, ReentrancyGuard, Initializable {
   using SafeMath for uint;
 
   address public override factory;
@@ -34,7 +34,7 @@ contract ZKHRouter is IZKHRouter, ReentrancyGuard {
     _;
   }
 
-  constructor(address _factory, address _WETH) {
+  function initialize(address _factory, address _WETH) external initializer {
     factory = _factory;
     WETH = _WETH;
   }

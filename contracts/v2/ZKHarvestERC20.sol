@@ -2,10 +2,11 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import "../interface/IZKHarvestERC20.sol";
 
-contract ZKHarvestERC20 is IZKHarvestERC20 {
+contract ZKHarvestERC20 is IZKHarvestERC20, Initializable {
     using SafeMath for uint;
 
     string public constant name = 'zkHarvest LPs';
@@ -20,7 +21,7 @@ contract ZKHarvestERC20 is IZKHarvestERC20 {
     bytes32 public constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
     mapping(address => uint) public nonces;
 
-    constructor() {
+    function initialize() public initializer {
         uint chainId = block.chainid;
 
         DOMAIN_SEPARATOR = keccak256(

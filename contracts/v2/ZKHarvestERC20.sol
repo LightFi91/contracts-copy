@@ -21,7 +21,7 @@ contract ZKHarvestERC20 is IZKHarvestERC20, Initializable {
     bytes32 public constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
     mapping(address => uint) public nonces;
 
-    function initialize() public initializer {
+    function initialize() virtual public initializer {
         uint chainId = block.chainid;
 
         DOMAIN_SEPARATOR = keccak256(
@@ -77,7 +77,7 @@ contract ZKHarvestERC20 is IZKHarvestERC20, Initializable {
         return true;
     }
 
-    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external {
+    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) virtual external {
         require(deadline >= block.timestamp, 'zkHarvest: EXPIRED');
         bytes32 digest = keccak256(
             abi.encodePacked(

@@ -12,27 +12,17 @@ async function main() {
     const zkWallet = Wallet.fromMnemonic(mnemonic);
     const deployer = new Deployer(hre, zkWallet);
 
-    const tokenContract = await deployer.loadArtifact("ZKHToken");
-    const dev2Address = "0x6d2b9b23a5daca4128f04443ef0fccdd71bf9f47"; // Replace with the desired address
+    const tokenContract = await deployer.loadArtifact("ZKHarvestFactory");
     const feeAddress = "0x6d2b9b23a5daca4128f04443ef0fccdd71bf9f47"; // Replace with the desired address
-    const initialMint = "9000000000000000000000000000"; 
-    const args = [dev2Address, feeAddress, initialMint];
-
+    const args = [zkWallet.address, feeAddress];
 
     const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, tokenContract);
     await beacon.deployed();
-    console.log('ZKHToken Beacon deployed to: ', beacon.address);
+    console.log('ZKHarvestFactory Beacon deployed to: ', beacon.address);
 
-    const zkhToken = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, tokenContract, args);
-    await zkhToken.deployed();
-    console.log('ZKHToken beacon proxy deployed to: ', zkhToken.address);
-
-    const verificationId = await hre.run("verify:verify", {
-        address: zkhToken.address,
-        contract: "ZKHToken",
-        constructorArguments: args
-    });
-    console.log('contract verified : ', verificationId);
+    const zkhFactory = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, tokenContract, args);
+    await zkhFactory.deployed();
+    console.log('ZKHarvestFactory beacon proxy deployed to: ', zkhFactory.address);
 }
 
 main()

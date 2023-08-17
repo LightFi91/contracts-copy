@@ -6,7 +6,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-import "../interface/IZKHToken.sol";
+import "./interface/IZKHToken.sol";
 
 // ZKHToken with Governance.
 contract ZKHToken is IZKHToken, ERC20Upgradeable, OwnableUpgradeable {
@@ -16,10 +16,10 @@ contract ZKHToken is IZKHToken, ERC20Upgradeable, OwnableUpgradeable {
     mapping (address => bool) private _isSExcludedFromFee; // excluded list from send
     mapping (address => bool) private _isPair;
     
-    uint256 public Tax = 0;
+    uint256 public Tax;
     
-    uint256 public _maxTxAmount = 100 * 10**6 * 1e18;
-    uint256 public constant _maxSupply = 100 * 10**6 * 1e18;
+    uint256 public _maxTxAmount;
+    uint256 public _maxSupply;
     
     address public dev1;
     address public dev2;
@@ -51,6 +51,11 @@ contract ZKHToken is IZKHToken, ERC20Upgradeable, OwnableUpgradeable {
         require(_dev2 != address(0), 'ZKH: dev cannot be the zero address');
      	require(_feeAddress != address(0), 'ZKH: feeAddress cannot be the zero address');
      	dev1 = msg.sender;
+
+        Tax = 0;
+        _maxTxAmount = 100 * 10**6 * 1e18;
+        _maxSupply = 100 * 10**6 * 1e18;
+
      	mint(msg.sender, _initialMint);
         dev2 = _dev2;
         feeAddress = _feeAddress;

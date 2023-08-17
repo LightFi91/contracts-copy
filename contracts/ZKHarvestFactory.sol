@@ -3,8 +3,8 @@ pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-import "../interface/IZKHarvestFactory.sol";
-import "../interface/IZKHarvestPair.sol";
+import "./interface/IZKHarvestFactory.sol";
+import "./interface/IZKHarvestPair.sol";
 import "./ZKHarvestPair.sol";
 
 contract ZKHarvestFactory is IZKHarvestFactory, Initializable {

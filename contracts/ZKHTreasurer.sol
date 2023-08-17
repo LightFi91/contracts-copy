@@ -2,25 +2,24 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "../interface/ITreasurerExpress.sol";
-import "./ZkHarvestToken.sol";
+import "./interface/ITreasurerExpress.sol";
+import "./interface/IZKHToken.sol";
+import "./lib/TreasurerUtils.sol";
 
-import "../lib/TreasurerUtils.sol";
 
-contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
-  using SafeERC20 for IERC20;
+contract ZKHTreasurer is ITreasurerExpress, OwnableUpgradeable, ReentrancyGuardUpgradeable {
   using EnumerableSet for EnumerableSet.UintSet;
 
-  modifier onlyZkHarvest() {
+  modifier onlyZKHMaster() {
     require(
-      msg.sender == zkHarvest,
-      "ZkHarvestTreasurer: caller is not zkHarvest"
+      msg.sender == zkhMaster,
+      "ZkHarvestTreasurer: caller is not ZKHMaster"
     );
     _;
   }
@@ -37,15 +36,15 @@ contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
   uint256 public constant MAX_LOCKUP_WEEKS = 24;
 
   // The ZKH token
-  ZkHarvestToken public immutable zkh;
-  // ZkHarvest address
-  address public zkHarvest;
+  IZKHToken public zkh;
+  // ZKHMaster address
+  address public zkhMaster;
 
   // The informations of each user
   mapping(address => UserInfo) private userInfo;
   // The total amount of ZKH that still needs to be paid. Must be less or equal
   // to this contract's ZKH balance.
-  uint256 public totalLocked = 0;
+  uint256 public totalLocked;
 
   // Part of a reward that will be locked up.
   uint256 public lockedRewardsBP;
@@ -54,7 +53,7 @@ contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
   // Lockup time in weeks
   uint256 public lockupTimeW;
   // Moment of the week when new unlocks happen, in seconds
-  uint256 public unlockMoment = 0;
+  uint256 public unlockMoment;
 
   event Claim(address indexed user, uint256 amount);
   event LockUp(address indexed user, uint256 amount, uint256 time);
@@ -64,14 +63,12 @@ contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
     uint256 amountBurnt
   );
 
-  constructor(
-    address _zkHarvest,
-    ZkHarvestToken _zkh,
+  function initialize(
+    IZKHToken _zkh,
     uint256 _lockedRewardsBP,
     uint256 _expressClaimBurnBP,
     uint256 _lockupTimeW
-  ) {
-    zkHarvest = _zkHarvest;
+  ) external initializer {
     zkh = _zkh;
     require(
       _lockedRewardsBP <= 10000,
@@ -88,11 +85,13 @@ contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
       "ZkHarvestTreasurer: lockupTimeW must be inbetween 4 and 24 weeks"
     );
     lockupTimeW = _lockupTimeW;
+    unlockMoment = 0;
+    totalLocked = 0;
   }
 
-  // Updates zkHarvest address
-  function updateZkHarvest(address _newZkHarvest) public onlyOwner {
-    zkHarvest = _newZkHarvest;
+  // Updates zkhMaster address
+  function updateZKHMaster(address _newZKHMaster) public onlyOwner {
+    zkhMaster = _newZKHMaster;
   }
 
   // Updates lockedRewardsBP value
@@ -144,7 +143,7 @@ contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
   function _lockupReward(
     address _user,
     uint256 _amount
-  ) internal onlyZkHarvest {
+  ) internal onlyZKHMaster {
     UserInfo storage user = userInfo[_user];
     uint256 nextClaimWeek = nextClaimableWeek();
     user.weeksToPay.add(nextClaimWeek);
@@ -158,7 +157,7 @@ contract ZkHarvestTreasurer is ITreasurerExpress, Ownable, ReentrancyGuard {
   function rewardUser(
     address _user,
     uint256 _amount
-  ) public override onlyZkHarvest nonReentrant {
+  ) public override onlyZKHMaster nonReentrant {
     if (_amount == 0) {
       return;
     }

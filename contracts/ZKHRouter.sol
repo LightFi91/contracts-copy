@@ -2,17 +2,16 @@
 
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
-import "../lib/ZKHLibrary.sol";
-import "../lib/TransferHelper.sol";
-import "../interface/IZKHRouter.sol";
-import "../interface/IZKHarvestFactory.sol";
-import "../interface/IZKHarvestPair.sol";
-import "../interface/IZKHEther.sol";
+import "./lib/ZKHLibrary.sol";
+import "./lib/TransferHelper.sol";
+import "./interface/IZKHRouter.sol";
+import "./interface/IZKHarvestFactory.sol";
+import "./interface/IZKHarvestPair.sol";
+import "./interface/IZKHEther.sol";
 
-contract ZKHRouter is IZKHRouter, ReentrancyGuard, Initializable {
+contract ZKHRouter is IZKHRouter, ReentrancyGuardUpgradeable {
   using SafeMath for uint;
 
   address public override factory;

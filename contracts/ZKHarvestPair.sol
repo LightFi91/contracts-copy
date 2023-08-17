@@ -5,11 +5,11 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-import "../interface/UQ112x112.sol";
-import "../interface/Math.sol";
-import "../interface/IZKHarvestPair.sol";
-import "../interface/IZKHarvestFactory.sol";
-import "../interface/IZKHarvestCallee.sol";
+import "./interface/UQ112x112.sol";
+import "./interface/Math.sol";
+import "./interface/IZKHarvestPair.sol";
+import "./interface/IZKHarvestFactory.sol";
+import "./interface/IZKHarvestCallee.sol";
 import "./ZKHarvestERC20.sol";
 
 contract ZKHarvestPair is IZKHarvestPair, ZKHarvestERC20, ReentrancyGuard {

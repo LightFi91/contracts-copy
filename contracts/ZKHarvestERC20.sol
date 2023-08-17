@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-import "../interface/IZKHarvestERC20.sol";
+import "./interface/IZKHarvestERC20.sol";
 
 contract ZKHarvestERC20 is IZKHarvestERC20, Initializable {
     using SafeMath for uint;

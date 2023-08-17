@@ -10,6 +10,7 @@ const mnemonic = fs.readFileSync(".secret").toString().trim();
 async function main() {
     // Initialize the wallet.1
     const zkWallet = Wallet.fromMnemonic(mnemonic);
+    zkWallet
     const deployer = new Deployer(hre, zkWallet);
 
     const tokenContract = await deployer.loadArtifact("ZKHToken");
@@ -18,21 +19,19 @@ async function main() {
     const initialMint = "9000000000000000000000000000"; 
     const args = [dev2Address, feeAddress, initialMint];
 
-
-    const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, tokenContract);
-    await beacon.deployed();
-    console.log('ZKHToken Beacon deployed to: ', beacon.address);
-
-    const zkhToken = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, tokenContract, args);
-    await zkhToken.deployed();
-    console.log('ZKHToken beacon proxy deployed to: ', zkhToken.address);
-
     const verificationId = await hre.run("verify:verify", {
-        address: zkhToken.address,
-        contract: "ZKHToken",
-        constructorArguments: args
+      address: "0x3F296fEDFbeB5B1101C58F04C7E46E978BfD996A",
+      contract: "contracts/ZKHToken.sol:ZKHToken",
+      constructorArguments: []
     });
     console.log('contract verified : ', verificationId);
+
+    // const verificationId = await hre.run("verify:verify", {
+    //     address: "0x8cc3Bb7fc3Ae5fC67cb4cA091610C8309CAF0b24",
+    //     contract: "contracts/ZKHToken.sol:ZKHToken",
+    //     constructorArguments: args
+    // });
+    // console.log('contract verified : ', verificationId);
 }
 
 main()

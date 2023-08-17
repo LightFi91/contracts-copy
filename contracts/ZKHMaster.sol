@@ -11,8 +11,8 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 
-import "../interface/ITreasurer.sol";
-import "../interface/IZKHToken.sol";
+import "./interface/ITreasurer.sol";
+import "./interface/IZKHToken.sol";
 
 
 contract ZKHMaster is OwnableUpgradeable, IERC721Receiver  {
@@ -76,11 +76,11 @@ contract ZKHMaster is OwnableUpgradeable, IERC721Receiver  {
     // reward tokens distributed per Second.
     uint256 public rewardPerSecond ;
     // Bonus muliplier for early Reward makers.
-    uint256 public BONUS_MULTIPLIER = 1;  
+    uint256 public BONUS_MULTIPLIER;  
     //Max uint256
     uint256 constant MAX_INT = type(uint256).max ;
     // Seconds per burn cycle.
-    uint256 public SECONDS_PER_CYCLE =  170 days ; 
+    uint256 public SECONDS_PER_CYCLE; 
     // Max ZKH Supply.
     uint256 public constant MAX_SUPPLY = 100 * 10**6 * 1e18;
     // Next minting cycle start timestamp.
@@ -98,10 +98,9 @@ contract ZKHMaster is OwnableUpgradeable, IERC721Receiver  {
     // nft owner data
     mapping(uint256 => address) public nftOwners; 
     // Total allocation points. Must be the sum of all allocation points in all pools.
-    uint256 public totalAllocPoint = 0;
+    uint256 public totalAllocPoint;
     // The timestamp when Reward mining starts.
     uint256 public startTimestamp;
-    
 
     event feeAddressUpdated(address);
     event UpdateEmissionRate(uint256 rewardPerSec);
@@ -144,11 +143,14 @@ contract ZKHMaster is OwnableUpgradeable, IERC721Receiver  {
         IZKHToken _rewardToken,
         address _devaddr,
         address _feeAddress,
-        ITreasurer _treasurer,
-        uint256 _startTimestamp
+        ITreasurer _treasurer
+
     ) public initializer {
         __Ownable_init(); // Initialize the OwnableUpgradeable contract
-
+        
+        BONUS_MULTIPLIER = 1;
+        SECONDS_PER_CYCLE = 170 days;
+        uint256 _startTimestamp = block.timestamp + 6 hours;
         require(_rewardToken != IERC20Upgradeable(address(0)), 'ZKH: Reward Token cannot be the zero address');
         require(_devaddr != address(0), 'ZKH: dev cannot be the zero address');
         require(_feeAddress != address(0), 'ZKH: FeeAddress cannot be the zero address');
